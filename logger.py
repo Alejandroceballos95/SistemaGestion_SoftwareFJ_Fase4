@@ -1,5 +1,6 @@
 import datetime
 
+
 class Logger:
     """
     Clase utilitaria encargada de registrar los eventos y errores del sistema en un archivo de texto físico.
@@ -14,6 +15,6 @@ class Logger:
         # 2. Armamos el mensaje final que se escribirá en el archivo
         log_mensaje = f"[{fecha_formateada}] ERROR: {mensaje}\n"
 
-        # 3. Abriumos el archivo, escribimos el mensaje y lo cerramos automáticamente
+        # 3. Abrimos el archivo, escribimos el mensaje y lo cerramos automáticamente
         with open("errores.log", "a", encoding="utf-8") as archivo:
             archivo.write(log_mensaje)
