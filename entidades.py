@@ -51,7 +51,7 @@ class Asesoria(Servicio):
 
 
 class AlquilerEquipo(Servicio):
-    """Servicio que se cobra por días de alquiler."""
+    """Servicios que se cobra por días de alquiler."""
 
     def calcular_costo(self, dias):
         # El alquiler suma un 10% adicional por seguros de daños
