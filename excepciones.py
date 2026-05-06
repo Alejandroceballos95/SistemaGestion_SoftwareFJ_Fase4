@@ -17,6 +17,16 @@ class DatoInvalidoError(SistemaGestionError):
 
 class RecursoNoDisponibleError(SistemaGestionError):
     """
+    Lanzada cuando se intenta reservar un servicio que no tiene disponibilidad o stock.
+    """
+
+    def __init__(self, mensaje="Error de disponibilidad: El recurso solicitado no está disponible."):
+        self.mensaje = mensaje
+        super().__init__(self.mensaje)
+
+
+class OperacionNoPermitidaError(SistemaGestionError):
+    """
     Lanzada cuando se intenta hacer una acción ilógica (ej: cancelar una reserva ya cancelada).
     """
 
