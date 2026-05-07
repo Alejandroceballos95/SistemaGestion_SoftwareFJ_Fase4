@@ -109,3 +109,13 @@ class AlquilerEquipo(Servicio):
         # El alquiler suma un 10% adicional por seguros de daños
         costo_total = self._precio_base * dias
         return costo_total + (costo_total * 0.10)
+
+
+class ReservaSala(Servicio):
+    """Servicio de reserva de salas físicas para eventos o reuniones."""
+
+    def calcular_costo(self, horas):
+        # La reserva de la sala tiene un costo por hora más un cargo fíjo por logítica y limpieza
+        cargo_logistica = 25000
+        costo_total = self._precio_base * horas
+        return costo_total + cargo_logistica
