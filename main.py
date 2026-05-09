@@ -4,111 +4,188 @@ import excepciones
 from logger import Logger
 
 
+def mostrar_menu():
+    print("\n" + "="*45)
+    print("SISTEMA DE GESTIÓN - SOFTWARE FJ")
+    print("="*45)
+    print("1. Registrar un nuevo Cliente")
+    print("2. Crear un nuevo Servicio")
+    print("3. Generar una Reserva")
+    print("4. Confirmar una Reserva")
+    print("5. Cancelar una Reserva")
+    print("6. Ver todos los registros (Reporte)")
+    print("7. Salir del sistema")
+    print("="*45)
+
+
 def main():
-    print("--- INICIANDO EL SISTEMA DE SOFTWARE FJ ---\n")
-
     # Listas en memoria
-    Lista_clientes = []
-    Lista_servicios = []
-    Lista_reservas = []
+    lista_clientes = []
+    lista_servicios = []
+    lista_reservas = []
 
-    # SIMULACION DE 10 OPERACIONES (PRUEBA QA)
+    while True:
+        mostrar_menu()
+        opcion = input("Seleccione una opción (1-7): ")
 
-    # 1) Crear cliente válido
-    try:
-        print("Op1: Registrando cliente válido...")
-        cliente1 = entidades.Cliente(
-            "1001", "Alejandro Ceballos", "alejandroceballos@correo.com", "3101234567")
-        Lista_clientes.append(cliente1)
-        print("-> OK: Cliente registrado:", cliente1._nombre)
-    except excepciones.SistemaGestionError as e:
-        Logger.registrar_error(str(e))
+        if opcion == "1":
+            # OPCIÓN 1: Registrar Cliente
+            print("\n--- REGISTRO DE CLIENTE ---")
+            identificacion = input("Ingrese el ID (sólo números): ")
+            nombre = input("Ingrese el nombre (sólo letras): ")
+            email = input("Ingrese el email: ")
+            telefono = input("Ingrese el teléfono (mín. 7 números): ")
 
-    # 2) Crear cliente con ID inválido (Fallo intencional)
-    try:
-        print("\nOp 2: Registrando cliente con ID inválido (letras)...")
-        cliente_malo = entidades.Cliente(
-            "ABC", "Jorge Mertínez", "jorge@correo.com", "32012344567")
-        Lista_clientes.append(cliente_malo)
-    except excepciones.SistemaGestionError as e:
-        print(f"-> ERROR CAPTURADO (Ver errores.log): {e}")
-        Logger.registrar_error(f"Op 2: {str(e)}")
+            try:
+                nuevo_cliente = entidades.Cliente(
+                    identificacion, nombre, email, telefono)
+                lista_clientes.append(nuevo_cliente)
+                print(f"¡Éxito! Cliente {nombre} registrado correctamente.")
+            except excepciones.SistemaGestionError as e:
+                print(f"ERROR: {e}")
+                print("El programa no se cerrará. Revisa 'errores.log'.")
+                Logger.registrar_error(f"Fallo al crear cliente: {e}")
 
-    # 3) Crear servicio de asesoría
-    try:
-        print("\nOp 3: Creando servicio de asesoría...")
-        serv1 = entidades.Asesoria(
-            "S01", "Asesoría en arquitectura de software", 50000)
-        Lista_servicios.append(serv1)
-        print("-> OK: Servicio creado:", serv1._descripcion)
-    except excepciones.SistemaGestionError as e:
-        Logger.registrar_error(str(e))
+        elif opcion == "2":
+            # OPCIÓN 2: Crear Servicio
+            print("\n--- CREACIÓN DE SERVICIO ---")
+            print("Tipos: 1. Asesoría | 2. Alquiler de Equipo | 3. Reserva de Sala")
+            tipo = input("Seleccione el tipo de servicio (1/2/3): ")
 
-    # 4) Crear servicio de alquiler de equipo
-    try:
-        print("\nOp 4: Creando servicio de alquiler de equipos...")
-        serv2 = entidades.AlquilerEquipo(
-            "S02", "Alquiler de servidor AWS", 150000)
-        Lista_servicios.append(serv2)
-        print("-> OK: Servicio creado:", serv2._descripcion)
-    except excepciones.SistemaGestionError as e:
-        Logger.registrar_error(str(e))
+            codigo = input("Ingrese el código del servicio (Ej. S01): ")
+            descripcion = input("Ingrese la descripción: ")
 
-    # 5) Crear servicio de reserva de sala
-    try:
-        print("\nOp 5: Creando servicio de reserva de sala...")
-        serv3 = entidades.ReservaSala("S03", "Sala de juntas VIP", 80000)
-        Lista_servicios.append(serv3)
-        print("-> OK: Servicio creado:", serv3._descripcion)
-    except excepciones.SistemaGestionError as e:
-        Logger.registrar_error(str(e))
+            try:
+                precio_base = float(input("Ingrese el precio base (número): "))
 
-    # 6) Crear una reserva válida
-    try:
-        print("\nOp 6: Generando reserva para Alejandro...")
-        reserva1 = reservas.Reserva(
-            Lista_clientes[0], Lista_servicios[2], 4)  # 4 horas de sala VIP
-        Lista_reservas.append(reserva1)
-        print("-> OK:", reserva1.mostrar_resumen())
-    except excepciones.SistemaGestionError as e:
-        Logger.registrar_error(str(e))
+                if tipo == "1":
+                    servicio = entidades.Asesoria(
+                        codigo, descripcion, precio_base)
+                elif tipo == "2":
+                    servicio = entidades.AlquilerEquipo(
+                        codigo, descripcion, precio_base)
+                elif tipo == "3":
+                    servicio = entidades.ReservaSala(
+                        codigo, descripcion, precio_base)
+                else:
+                    print("Opción de tipo de servicio no válida.")
+                    continue
 
-    # 7) Confirmar la reserva
-    try:
-        print("\nOp 7: Confirmando la reserva anterior...")
-        Lista_reservas[0].confirmar()
-        print("-> OK: Estado actual ->", Lista_reservas[0].estado)
-    except excepciones.SistemaGestionError as e:
-        Logger.registrar_error(str(e))
+                lista_servicios.append(servicio)
+                print(
+                    f"¡Éxito! Servicio '{descripcion}' creado correctamente.")
 
-    # 8) Cancelar la reserva
-    try:
-        print("\nOp 8: Cancelando la reserva...")
-        Lista_reservas[0].cancelar()
-        print("-> OK: Estado actual ->", Lista_reservas[0].estado)
-    except excepciones.SistemaGestionError as e:
-        Logger.registrar_error(str(e))
+            except ValueError:
+                print("ERROR: El precio base debe ser un valor numérico.")
+                Logger.registrar_error(
+                    "Fallo al crear servicio: El precio base no es un número.")
+            except excepciones.SistemaGestionError as e:
+                print(f"ERROR: {e}")
+                Logger.registrar_error(f"Fallo al crear servicio: {e}")
 
-    # 9) Intentar cancelar la reserva ya cancelada (Fallo intencional)
-    try:
-        print("\nOp 9: Intentanco cancelar una reserva que ya está cancelada...")
-        Lista_reservas[0].cancelar()
-    except excepciones.SistemaGestionError as e:
-        print(f"-> ERROR CAPTURADO (Ver errores.log): {e}")
-        Logger.registrar_error(f"Op 9: {str(e)}")
+        elif opcion == "3":
+            # OPCIÓN 3: Generar Reserva
+            print("\n--- GENERAR RESERVA ---")
+            if not lista_clientes or not lista_servicios:
+                print("Debes tener al menos un cliente y un servicio registrados.")
+                continue
 
-    # 10) Crear cliente con email inválido (Fallo intencional)
-    try:
-        print("\nOp 10: Registrando cliente con email inválido...")
-        cliente_malo2 = entidades.Cliente(
-            "1002", "Salomé Londoño", "correo-sin-arroba.com", "3001234567")
-        Lista_clientes.append(cliente_malo2)
-    except excepciones.SistemaGestionError as e:
-        print(f"-> ERROR CAPTURADO (Ver errores.log): {e}")
-        Logger.registrar_error(f"Op 10: {str(e)}")
+            # Mostrar clientes
+            print("Clientes disponibles:")
+            for i, c in enumerate(lista_clientes):
+                print(f"  {i}. {c._nombre} (ID: {c._identificacion})")
 
-    print("\n--- SIMULACIÓN FINALIZADA ---")
-    print("Si ves esto, el programa NO colapsó. Revisa 'errores.log' para ver el reporte de los fallos.")
+            # Mostrar servicios
+            print("\nServicios disponibles:")
+            for i, s in enumerate(lista_servicios):
+                print(f"  {i}. {s._descripcion} - Base: ${s._precio_base}")
+
+            try:
+                idx_cliente = int(
+                    input("\nSeleccione el número del cliente: "))
+                idx_servicio = int(
+                    input("Seleccione el número del servicio: "))
+                tiempo = float(
+                    input("Ingrese la cantidad de tiempo (horas o días según aplique): "))
+
+                cliente_sel = lista_clientes[idx_cliente]
+                servicio_sel = lista_servicios[idx_servicio]
+
+                nueva_reserva = reservas.Reserva(
+                    cliente_sel, servicio_sel, tiempo)
+                lista_reservas.append(nueva_reserva)
+                print("¡Éxito! Reserva generada:")
+                print("   ->", nueva_reserva.mostrar_resumen())
+
+            except (ValueError, IndexError):
+                print(
+                    "ERROR: Selección inválida. Debes ingresar el número correcto de la lista.")
+                Logger.registrar_error(
+                    "Fallo en reserva: Selección de índices inválida en listas.")
+            except excepciones.SistemaGestionError as e:
+                print(f"ERROR: {e}")
+                Logger.registrar_error(f"Fallo al reservar: {e}")
+
+        elif opcion == "4":
+            # OPCIÓN 4: Confirmar Reserva
+            print("\n--- CONFIRMAR RESERVA ---")
+            if not lista_reservas:
+                print("No hay reservas creadas.")
+                continue
+
+            for i, r in enumerate(lista_reservas):
+                print(f"  {i}. {r.mostrar_resumen()}")
+
+            try:
+                idx = int(
+                    input("\nSeleccione el número de la reserva a confirmar: "))
+                lista_reservas[idx].confirmar()
+                print(
+                    f"Reserva de {lista_reservas[idx].cliente._nombre} confirmada con éxito.")
+            except (ValueError, IndexError):
+                print("ERROR: Selección inválida.")
+            except excepciones.SistemaGestionError as e:
+                print(f"ERROR: {e}")
+                Logger.registrar_error(f"Fallo al confirmar: {e}")
+
+        elif opcion == "5":
+            # OPCIÓN 5: Cancelar Reserva
+            print("\n--- CANCELAR RESERVA ---")
+            if not lista_reservas:
+                print("No hay reservas creadas.")
+                continue
+
+            for i, r in enumerate(lista_reservas):
+                print(f"  {i}. {r.mostrar_resumen()}")
+
+            try:
+                idx = int(
+                    input("\nSeleccione el número de la reserva a cancelar: "))
+                lista_reservas[idx].cancelar()
+                print(
+                    f"Reserva de {lista_reservas[idx].cliente._nombre} cancelada con éxito.")
+            except (ValueError, IndexError):
+                print("ERROR: Selección inválida.")
+            except excepciones.SistemaGestionError as e:
+                print(f"ERROR: {e}")
+                Logger.registrar_error(f"Fallo al cancelar: {e}")
+
+        elif opcion == "6":
+            # OPCIÓN 6: Ver Reportes
+            print("\n--- REPORTES DEL SISTEMA ---")
+            print(f"Total Clientes: {len(lista_clientes)}")
+            print(f"Total Servicios: {len(lista_servicios)}")
+            print(f"Total Reservas: {len(lista_reservas)}\n")
+            for r in lista_reservas:
+                print(f"- {r.mostrar_resumen()}")
+
+        elif opcion == "7":
+            # OPCIÓN 7: Salir
+            print("\nSaliendo del sistema Software FJ... ¡Hasta luego!")
+            break
+
+        else:
+            print("Opción inválida. Intente de nuevo.")
 
 
 if __name__ == "__main__":
