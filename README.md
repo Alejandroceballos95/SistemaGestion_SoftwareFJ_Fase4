@@ -15,13 +15,17 @@ La característica principal de este software es su **arquitectura a prueba de f
 
 ## ⚙️ ¿Cómo ejecutar el programa?
 
-Para iniciar la simulación del sistema, asegúrate de tener Python instalado en tu equipo y ejecuta el archivo principal desde tu terminal:
+Para iniciar el sistema, asegúrate de tener Python instalado en tu equipo y ejecuta el archivo principal desde tu terminal:
 
+```bash
 python main.py
+```
 
 ### ¿Qué sucederá al ejecutarlo?
-El sistema ejecutará automáticamente una prueba de control de calidad (QA) que consta de **10 operaciones secuenciales**. 
-Verás en tu consola cómo el programa registra clientes y servicios válidos, crea y cancela reservas, y cómo **atrapa intencionalmente** operaciones inválidas (como correos mal escritos o intentos de cancelar una reserva que ya estaba cancelada).
+El programa desplegará un **Menú Interactivo (CLI)** que te permitirá actuar como el administrador del negocio. Podrás interactuar con el sistema eligiendo opciones para registrar clientes, crear servicios corporativos y gestionar reservas.
+
+**Prueba de Control de Calidad (QA):**
+Te invitamos a interactuar con el sistema ingresando intencionalmente datos erróneos (por ejemplo, registrar un teléfono con letras, un correo sin arroba o intentar cancelar una reserva que ya estaba cancelada). Verás en tu consola cómo el sistema **atrapa la excepción**, te advierte del error y vuelve a cargar el menú principal sin colapsar.
 
 ---
 
@@ -29,7 +33,7 @@ Verás en tu consola cómo el programa registra clientes y servicios válidos, c
 
 El sistema está construido de forma modular para garantizar su escalabilidad:
 
-* **`main.py`**: Archivo principal que orquesta la ejecución y realiza la simulación de las 10 operaciones.
+* **`main.py`**: Archivo principal que despliega el menú interactivo y orquesta la ejecución del sistema.
 * **`entidades.py`**: Contiene las clases abstractas y concretas de los `Clientes` y `Servicios`, aplicando herencia y polimorfismo para el cálculo de costos.
 * **`reservas.py`**: Implementa el concepto de composición, uniendo a un Cliente con un Servicio para gestionar el ciclo de vida de un ticket de reserva.
 * **`excepciones.py`**: Define los errores personalizados (`DatoInvalidoError`, `OperacionNoPermitidaError`, etc.) para controlar el flujo del negocio.
@@ -39,9 +43,9 @@ El sistema está construido de forma modular para garantizar su escalabilidad:
 
 ## 📝 Registro de Errores (Logs)
 
-Si durante la ejecución se detecta una operación inválida, el sistema informará en pantalla pero **no se cerrará**. En su lugar, el incidente quedará guardado con su fecha y hora exacta en un archivo de texto llamado:
+Si durante tu interacción con el menú el sistema detecta una operación inválida, informará en pantalla pero **no se cerrará**. En su lugar, el incidente quedará guardado de forma silenciosa con su fecha y hora exacta en un archivo de texto llamado:
 
-📄 `errores.log` *(Este archivo se generará automáticamente en la raíz del proyecto tras la primera ejecución).*
+📄 `errores.log` *(Este archivo se generará automáticamente en la raíz del proyecto tras registrar el primer error).*
 
 ---
 *Desarrollado como proyecto académico para la Universidad Nacional Abierta y a Distancia (UNAD).*
